@@ -1,87 +1,110 @@
 <?php
 
-$apiKey = 'ae4b927814a4844633f7df27f555b7';
-$email = '';
-$password = '';
-
-$s = new SlimTimer($apiKey);
-$userId = $s->authenticate($email, $password);
-
-//$tasks = $s->listTasks($userId);
-//var_dump($tasks);
-
-//$s->createTask($userId, "Test via API");
-//$s->updateTask($userId, 1879734, null, array('foo', 'bar'));
-//$s->showTask($userId, 1899512);
-//$s->deleteTask($userId, 1899512);
-//$s->listTimes($userId);
-//$s->listTimesForTask($userId, 1879734);
-//$s->createTime($userId, 1879734, date('Y-m-d H:i:s'), 1);
-$time = $s->showTime($userId, 19016444);
-//var_dump($time->{'start-time'});
-//var_dump($s->updateTime($userId, 1879734, $time->id, 10, $time->{'start-time'}));
-$s->deleteTime($userId, $time->id);
+/**
+ * A class to interact with the SlimTimer API
+ * 
+ * @author Chris Lock <code@catharsis.co.uk>
+ * @see http://slimtimer.com/help/api
+ * @see https://github.com/catharsisjelly/SlimTimerPHP
+ */
 
 class SlimTimer
-{
-	private $ch;
+{	
+	// The URL to use
+	const MAIN_URL = 'http://slimtimer.com/';
+	
+	// This API key is mine, feel free to use your own if you want
+	const API_KEY = 'ae4b927814a4844633f7df27f555b7';
+	
+	/**
+	 * Class var to hold the curl handle
+	 * @var resource
+	 */
+	private $_ch;
 
-	private $_mainURL = 'http://slimtimer.com/';
+	/**
+	 * The user ID that is used for each request
+	 * @var int
+	 */
+	private $_userID = null;
+	
+	/**
+	 * The Access token that is grabbed from the authentication method
+	 * @var string 
+	 */
 	private $_accessToken = null;
-	private $_apiKey = null;
 
-	public function __construct($apiKey)
+	public function __construct()
 	{
-		$this->_apiKey = $apiKey;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Accept: application/xml'
 		));
-		$this->ch = $ch;
+		$this->_ch = $ch;
+	}
+	
+	/**
+	 * Set the user ID and Access token
+	 * 
+	 * @param int $userId
+	 * @param string $token
+	 */
+	public function setUserAndToken($userID, $token)
+	{
+		$this->_userID = $userID;
+		$this->_accessToken = $token;
 	}
 
 	/**
-	 * Authenticate the user and grab a token id for them, returns the userId
+	 * Authenticate the user and grab a token id for them, returns a keyed array of the user-id & token
 	 *
 	 * @param string $email 
 	 * @param string $password 
-	 * @return int
+	 * @param bool $setToken 
+	 * @return array
 	 */
-	public function authenticate($email, $password)
+	public function authenticate($email, $password, $setToken = false)
 	{
 		$params = array(
 			'user' => array(
 				'email' => $email,
 				'password' => $password
 			),
-			'api_key' => $this->_apiKey
+			'api_key' => self::API_KEY
 		);
-		curl_setopt($this->ch, CURLOPT_POST, 1);
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/token');
-        curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        $content=curl_exec($this->ch);
+		curl_setopt($this->_ch, CURLOPT_POST, 1);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/token');
+        curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        $content=curl_exec($this->_ch);
 
 		$xml = simplexml_load_string($content);
+		var_dump($xml);
 		if(!$xml)
 			return false;
 
-		$this->_accessToken = (string) $xml->{'access-token'};
+		if($setToken === true)
+		{
+			$this->_accessToken = (string) $xml->{'access-token'};
+			$this->_userID = (int) $xml->{'user-id'};
+		}
 		
-		return (int) $xml->{'user-id'};
+		return array(
+			'user-id' => (int) $xml->{'user-id'},
+			'token' => (string) $xml->{'access-token'}
+		);
 	}
 
 	/**
 	 * List the tasks in your list 
 	 *
-	 * @param int $user_id
 	 * @param bool $showCompleted
-	 * @param array $role
+	 * @param array $role an array of values from owner,coworker,reporter
 	 * @param int $offset
 	 * @return obj|false
 	 */
-	public function listTasks($user_id, $showCompleted = true, array $role = array('owner','coworker'), $offset = null)
+	public function listTasks($showCompleted = true, array $role = array('owner','coworker'), $offset = null)
 	{
 		$string = array();
 		$params = array(
@@ -92,10 +115,10 @@ class SlimTimer
 			'offset' => (is_int($offset) ? $offset : 0)
 		);
 		
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/tasks?'.http_build_query($params));
-		curl_setopt($this->ch, CURLOPT_HTTPGET, 1);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks?'.http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		
 		return $this->_tidyXML($content);
 	}
@@ -103,14 +126,13 @@ class SlimTimer
 	/**
 	 * Create a task
 	 *
-	 * @param int $user_id 
 	 * @param string $name 
 	 * @param array $tags 
 	 * @param array $coworkers 
 	 * @param array $reporters 
 	 * @return obj|false
 	 */
-	public function createTask($user_id, $name, array $tags = array(), array $coworkers = array(), array $reporters = array())
+	public function createTask($name, array $tags = array(), array $coworkers = array(), array $reporters = array())
 	{
 		$params = array(
 			'api_key' => $this->_apiKey,
@@ -123,19 +145,17 @@ class SlimTimer
 			)
 		);
 				
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/tasks');
-		curl_setopt($this->ch, CURLOPT_POST, 1);
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks');
+		curl_setopt($this->_ch, CURLOPT_POST, 1);
+		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
- 	// @param string $completed Date format yyyy-mm-dd hh:mm:ss
 	/**
 	 * Update a task
 	 *
-	 * @param int $user_id 
 	 * @param int $task_id 
 	 * @param string $name 
 	 * @param array $tags 
@@ -144,7 +164,7 @@ class SlimTimer
 	 * @param string $completed 
 	 * @return obj|false
 	 */
-	public function updateTask($user_id, $task_id, $name = null, array $tags = array(), array $coworkers = array(), array $reporters = array(), $completed = null)
+	public function updateTask($task_id, $name = null, array $tags = array(), array $coworkers = array(), array $reporters = array(), $completed = null)
 	{
 		$params = array(
 			'api_key' => $this->_apiKey,
@@ -157,65 +177,62 @@ class SlimTimer
 				'completed_on' => $this->_checkDate($completed)
 			)
 		);
-		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($params));
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/tasks/'.$task_id);
+		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "PUT");
+		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks/'.$task_id);
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * Helper function to easily and quickly complete a task, by default complete it now unless you specify a date
 	 *
-	 * @param int $user_id 
 	 * @param int $task_id 
 	 * @param string $date 
 	 * @return obj|false
 	 */
-	public function completeTask($user_id, $task_id, $date = null)
+	public function completeTask($task_id, $date = null)
 	{
 		if(null === $date)
 			$date = date('Y-m-d H:i:s');
 			
-		return $this->updateTask($user_id, $task_id, null, array(), array(), array(), $date);
+		return $this->updateTask($task_id, null, array(), array(), array(), $date);
 	}
 	
 	/**
 	 * Show a task
 	 *
-	 * @param int $user_id 
 	 * @param int $task_id 
 	 * @return obj|false
 	 */
-	public function showTask($user_id, $task_id)
+	public function showTask($task_id)
 	{
 		$params = array(
 			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 		);
-		curl_setopt($this->ch, CURLOPT_HTTPGET, 1);
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/tasks/'.$task_id.'?'.http_build_query($params));
-		$content = curl_exec($this->ch);
+		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks/'.$task_id.'?'.http_build_query($params));
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * Delete a task
 	 *
-	 * @param int $user_id 
 	 * @param int $task_id 
 	 * @return bool
 	 */
-	public function deleteTask($user_id, $task_id)
+	public function deleteTask($task_id)
 	{
 		$params = array(
 			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 		);
-		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/tasks/'.$task_id.'?'.http_build_query($params));
-		$content = curl_exec($this->ch);
+		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks/'.$task_id.'?'.http_build_query($params));
+		$content = curl_exec($this->_ch);
 		if(!$content)
 			return true;
 		return false;
@@ -224,14 +241,13 @@ class SlimTimer
 	/**
 	 * List the times for any particular task
 	 *
-	 * @param int $user_id 
 	 * @param int $task_id 
 	 * @param string $startDate 
 	 * @param string $endDate 
 	 * @param string $offset 
 	 * @return obj|false
 	 */
-	public function listTimesForTask($user_id, $task_id, $startDate = null, $endDate = null, $offset = null)
+	public function listTimesForTask($task_id, $startDate = null, $endDate = null, $offset = null)
 	{
 		// /users/user_id/time_entries
 		$params = array(
@@ -244,23 +260,22 @@ class SlimTimer
 			)
 		);
 
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/tasks/'.$task_id.'/time_entries?'.http_build_query($params));
-		curl_setopt($this->ch, CURLOPT_HTTPGET, 1);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks/'.$task_id.'/time_entries?'.http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * List the timesentries in the account
 	 *
-	 * @param int $user_id 
 	 * @param string $startDate 
 	 * @param string $endDate 
 	 * @param int $offset 
 	 * @return obj|false
 	 */
-	public function listTimes($user_id, $startDate = null, $endDate = null, $offset = null)
+	public function listTimes($startDate = null, $endDate = null, $offset = null)
 	{
 		// /users/user_id/time_entries
 		$params = array(
@@ -272,17 +287,16 @@ class SlimTimer
 				'offset' => (is_int($offset) ? $offset : 0)
 			)
 		);
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/time_entries?'.http_build_query($params));
-		curl_setopt($this->ch, CURLOPT_HTTPGET, 1);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries?'.http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * Create a time entry
 	 *
-	 * @param int $user_id 
 	 * @param int $task_id 
 	 * @param int $duration
 	 * @param string $startTime DEFAULT=now
@@ -292,7 +306,7 @@ class SlimTimer
 	 * @param string $progress 
 	 * @return obj|false
 	 */
-	public function createTime($user_id, $task_id, $duration, $startTime = null, $endTime = null, array $tags = array(), $comments = "", $progress = false)
+	public function createTime($task_id, $duration, $startTime = null, $endTime = null, array $tags = array(), $comments = "", $progress = false)
 	{
 		if($duration <= 0)
 			throw new Exception('Duration must be more than 0');
@@ -315,37 +329,35 @@ class SlimTimer
 				'in_progress' => $progress,
 			)
 		);
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/time_entries');
-		curl_setopt($this->ch, CURLOPT_POST, 1);
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($params));
-		$content = curl_exec($this->ch);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries');
+		curl_setopt($this->_ch, CURLOPT_POST, 1);
+		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * Show a time entry
 	 *
-	 * @param int $user_id 
 	 * @param int $time_id 
 	 * @return obj|false
 	 */
-	public function showTime($user_id, $time_id)
+	public function showTime($time_id)
 	{
 		$params = array(
 			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken
 		);
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/time_entries/'.$time_id.'?'.http_build_query($params));
-		curl_setopt($this->ch, CURLOPT_HTTPGET, 1);
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id.'?'.http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * Update a time entry
 	 *
-	 * @param int $user_id 
 	 * @param int $time_id 
 	 * @param int $task_id 
 	 * @param int $duration 
@@ -357,7 +369,7 @@ class SlimTimer
 	 * @return obj|false
 	 * @author chris
 	 */
-	public function updateTime($user_id, $task_id, $time_id, $duration, $startTime, $endTime = null, array $tags = array(), $comments = "", $progress = false)
+	public function updateTime($task_id, $time_id, $duration, $startTime, $endTime = null, array $tags = array(), $comments = "", $progress = false)
 	{
 		if($duration <= 0)
 			throw new Exception('Duration must be more than 0');
@@ -377,30 +389,29 @@ class SlimTimer
 				'in_progress' => $progress,
 			)
 		);
-		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($params));
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/time_entries/'.$time_id);
+		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "PUT");
+		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id);
 
-		$content = curl_exec($this->ch);
+		$content = curl_exec($this->_ch);
 		return $this->_tidyXML($content);
 	}
 	
 	/**
 	 * Delete a time entry
 	 *
-	 * @param int $user_id 
 	 * @param int $time_id 
 	 * @return bool
 	 */
-	public function deleteTime($user_id, $time_id)
+	public function deleteTime($time_id)
 	{
 		$params = array(
 			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken
 		);
-		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-		curl_setopt($this->ch, CURLOPT_URL, $this->_mainURL.'/users/'.$user_id.'/time_entries/'.$time_id.'?'.http_build_query($params));
-		$content = curl_exec($this->ch);
+		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id.'?'.http_build_query($params));
+		$content = curl_exec($this->_ch);
 		if(!$content)
 			return true;
 		return false;
@@ -437,6 +448,11 @@ class SlimTimer
 			return false;
 
 		return json_decode(json_encode($xml));
+	}
+
+	public function __unset($name)
+	{
+		curl_close($this->_ch);
 	}
 
 }
