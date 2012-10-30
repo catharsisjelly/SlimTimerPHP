@@ -80,7 +80,6 @@ class SlimTimer
         $content=curl_exec($this->_ch);
 
 		$xml = simplexml_load_string($content);
-		var_dump($xml);
 		if(!$xml)
 			return false;
 
@@ -108,7 +107,7 @@ class SlimTimer
 	{
 		$string = array();
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'show_completed' => ($showCompleted ? 'yes' : 'no'),
 			'role' => implode(',', $role),
@@ -135,7 +134,7 @@ class SlimTimer
 	public function createTask($name, array $tags = array(), array $coworkers = array(), array $reporters = array())
 	{
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'task' => array(
 				'name' => $name,
@@ -167,7 +166,7 @@ class SlimTimer
 	public function updateTask($task_id, $name = null, array $tags = array(), array $coworkers = array(), array $reporters = array(), $completed = null)
 	{
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'task' => array(
 				'name' => $name,
@@ -209,7 +208,7 @@ class SlimTimer
 	public function showTask($task_id)
 	{
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 		);
 		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
@@ -227,7 +226,7 @@ class SlimTimer
 	public function deleteTask($task_id)
 	{
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 		);
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
@@ -251,7 +250,7 @@ class SlimTimer
 	{
 		// /users/user_id/time_entries
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'timeentry' => array(
 				'range_start' => $this->_checkDate($startDate), 
@@ -279,7 +278,7 @@ class SlimTimer
 	{
 		// /users/user_id/time_entries
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'timeentry' => array(
 				'range_start' => $this->_checkDate($startDate), 
@@ -315,7 +314,7 @@ class SlimTimer
 			$startTime = date('Y-m-d H:i:s');
 
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'time_entry' => array(
 				// required
@@ -345,7 +344,7 @@ class SlimTimer
 	public function showTime($time_id)
 	{
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken
 		);
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id.'?'.http_build_query($params));
@@ -375,7 +374,7 @@ class SlimTimer
 			throw new Exception('Duration must be more than 0');
 
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
 			'time_entry' => array(
 				// required
@@ -406,7 +405,7 @@ class SlimTimer
 	public function deleteTime($time_id)
 	{
 		$params = array(
-			'api_key' => $this->_apiKey,
+			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken
 		);
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
