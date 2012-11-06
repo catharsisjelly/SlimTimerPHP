@@ -133,6 +133,9 @@ class SlimTimer
 	 */
 	public function createTask($name, array $tags = array(), array $coworkers = array(), array $reporters = array())
 	{
+		if(empty($name))
+			throw new Exception('name parameter cannot be null');
+		
 		$params = array(
 			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
@@ -160,7 +163,7 @@ class SlimTimer
 	 * @param array $tags 
 	 * @param array $coworkers 
 	 * @param array $reporters 
-	 * @param string $completed 
+	 * @param string $completed A date/time in the format YYYY-MM-DD HH-MM-SS
 	 * @return obj|false
 	 */
 	public function updateTask($task_id, $name = null, array $tags = array(), array $coworkers = array(), array $reporters = array(), $completed = null)
@@ -427,10 +430,10 @@ class SlimTimer
 		if(!$string)
 			return false;
 		
-		if($string && preg_match("/\d{4}-\d{2}-\d{2}T?\d{2}:\d{2}:\d{2}/", $string))
+		if($string && preg_match("/\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}/", $string))
 			return $string;
 		
-		throw new Exception("Date format must be yyyy-mm-dd hh:mm:ss");
+		throw new Exception("Date format must be yyyy-mm-dd hh:mm:ss you provided {$string}");
 	}
 	
 	/**

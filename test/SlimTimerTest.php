@@ -8,6 +8,8 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	var $config = array();
 	var $tasks = array();
 	
+	protected static $testTaskID;
+	
     protected function setUp()
 	{
 		$this->class = new SlimTimer();
@@ -33,6 +35,10 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		}
 	}
 
+	protected function authenticate()
+	{
+		return $this->class->authenticate($this->config['email'], $this->config['password'], true);
+	}
 
 	public function testAuthenticateFail()
 	{
@@ -46,7 +52,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	
 	public function testAuthenticatePass()
 	{
-		$return = $this->class->authenticate($this->config['email'], $this->config['password']);
+		$return = $this->authenticate();
 		$this->assertTrue(is_array($return));
 		$this->assertArrayHasKey('user-id', $return);
 		$this->assertArrayHasKey('token', $return);
@@ -57,7 +63,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	public function testCreateTaskBasic()
 	{
 		$taskName = 'testCreateTaskBasic';
-		$this->class->authenticate($this->config['email'], $this->config['password'], true);
+		$this->authenticate();
 		$task = $this->class->createTask($taskName);
 		$this->tasks[] = $task;
 		$this->assertTrue(is_object($task));
@@ -69,7 +75,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	{
 		$taskName = 'testCreateTaskWithTags';
 		$tags = array('tag1', 'tag2');
-		$this->class->authenticate($this->config['email'], $this->config['password'], true);
+		$this->authenticate();
 		$task = $this->class->createTask($taskName, $tags);
 		$this->tasks[] = $task;
 		$this->assertTrue(is_object($task));
@@ -85,7 +91,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		$taskName = 'testCreateTaskWithCoworkers';
 		if(array_key_exists('coworkers', $this->config))
 		{
-			$this->class->authenticate($this->config['email'], $this->config['password'], true);
+			$this->authenticate();
 			$task = $this->class->createTask($taskName, array(), $this->config['coworkers']);
 			$this->tasks[] = $task;
 			
@@ -108,7 +114,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		$taskName = 'testCreateTaskWithReporters';
 		if(array_key_exists('reporters', $this->config))
 		{
-			$this->class->authenticate($this->config['email'], $this->config['password'], true);
+			$this->authenticate();
 			$task = $this->class->createTask($taskName, array(), array(), $this->config['reporters']);
 			$this->tasks[] = $task;
 			$this->assertTrue(is_object($task));
@@ -125,6 +131,62 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 			$this->markTestSkipped("Test skipped due to missing reporters in the config");
 		}
 	}
+	
+	public function testCreateTaskEmptyName()
+	{
+		$this->setExpectedException('Exception');
+		$this->authenticate();
+		$task = $this->class->createTask('');
+	}
+	
+	public function testUpdateTaskName()
+	{
+		$taskName = 'Bob';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		
+		// Update the task
+		$task = $this->class->updateTask($task->id, 'Jim');
+		$this->assertTrue(is_object($task));
+		$this->assertEquals('Jim', $task->name);
+		$this->assertTrue(((int) $task->id > 0));
+	}
+	
+	public function testUpdateTaskNoName()
+	{
+		$taskName = 'Bob';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		
+		// Update the task
+		$task = $this->class->updateTask($task->id);
+		$this->assertTrue(is_object($task));
+		$this->assertEquals('Bob', $task->name);
+		$this->assertTrue(((int) $task->id > 0));
+	}
+	
+	public function testUpdateTaskBadID()
+	{
+		$this->markTestIncomplete('Not implemented yet');
+	}
+	
+	public function testCompleteTask()
+	{
+		$taskName = 'Bob';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		$time = time();
+		$completedTask = $this->class->completeTask($task->id, date('Y-m-d H:i:s', $time));
+		$this->assertTrue(is_string($completeTask->completed_on));
+		$this->assertRegExp('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/', $completeTask->completed_on);
+		$this->assertNotNull(strtotime($completedTask->completed_on));
+		$this->assertTrue(strtotime($completedTask->completed_on) >= $time);
+	}
+	
+	
 }
 
 ?>
