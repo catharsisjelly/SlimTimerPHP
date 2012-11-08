@@ -371,7 +371,7 @@ class SlimTimer
 	 * @return obj|false
 	 * @author chris
 	 */
-	public function updateTime($task_id, $time_id, $duration, $startTime, $endTime = null, array $tags = array(), $comments = "", $progress = false)
+	public function updateTime($time_id, $task_id = null, $duration = null, $startTime = null, $endTime = null, array $tags = array(), $comments = "", $progress = false)
 	{
 		if($duration <= 0)
 			throw new Exception('Duration must be more than 0');
@@ -391,6 +391,13 @@ class SlimTimer
 				'in_progress' => $progress,
 			)
 		);
+		
+		if($duration)
+			$params['time_entry']['duration_in_seconds'] = (int) $duration;
+		
+		if($task_id)
+			$params['time_entry']['task_id'] = $task_id;
+			
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "PUT");
 		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id);
@@ -445,7 +452,7 @@ class SlimTimer
 	private function _tidyXML($content)
 	{
 		$content = preg_replace("/[\r\n\s]{2,}/", "", $content);
-		$xml = simplexml_load_string($content);
+		$xml = @simplexml_load_string($content);
 		if(!$xml)
 			return false;
 

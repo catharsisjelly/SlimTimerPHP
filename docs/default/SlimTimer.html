@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class SlimTimer</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class SlimTimer</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">A class to interact with the SlimTimer API</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Chris Lock &lt;<a href="mailto:code@catharsis.co.uk">code@catharsis.co.uk</a>&gt;</li>
+				<li><span class="field">see:</span> <a href="https://github.com/catharsisjelly/SlimTimerPHP">https://github.com/catharsisjelly/SlimTimerPHP</a></li>
+				<li><span class="field">see:</span> <a href="http://slimtimer.com/help/api">http://slimtimer.com/help/api</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_SlimTimer.php.html">/SlimTimer.php</a> (line <span class="field">11</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Constants</span> (<a href="#sec-consts">details</a>)
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<a href="#API_KEY" title="details" class="const-name">API_KEY</a> = 					<span class="var-type"> 'ae4b927814a4844633f7df27f555b7'</span>
+
+				</div>
+								<div class="const-title">
+					<a href="#MAIN_URL" title="details" class="const-name">MAIN_URL</a> = 					<span class="var-type"> 'http://slimtimer.com/'</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+									<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">SlimTimer</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#authenticate" title="details" class="method-name">authenticate</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$email</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$password</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$setToken</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#completeTask" title="details" class="method-name">completeTask</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$date</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#createTask" title="details" class="method-name">createTask</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$coworkers</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$reporters</span> = <span class="var-default">array()</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#createTime" title="details" class="method-name">createTime</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$duration</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$startTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$endTime</span> = <span class="var-default">null</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$comments</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$progress</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#deleteTask" title="details" class="method-name">deleteTask</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#deleteTime" title="details" class="method-name">deleteTime</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$time_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#listTasks" title="details" class="method-name">listTasks</a>
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$showCompleted</span> = <span class="var-default">true</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$role</span> = <span class="var-default">array('owner','coworker')</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#listTimes" title="details" class="method-name">listTimes</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$startDate</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$endDate</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#listTimesForTask" title="details" class="method-name">listTimesForTask</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$startDate</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$endDate</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setUserAndToken" title="details" class="method-name">setUserAndToken</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$userID</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$token</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$userId</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#showTask" title="details" class="method-name">showTask</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#showTime" title="details" class="method-name">showTime</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$time_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#updateTask" title="details" class="method-name">updateTask</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">null</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$coworkers</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$reporters</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$completed</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">obj|false</span>
+										<a href="#updateTime" title="details" class="method-name">updateTime</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$time_id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$duration</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$startTime</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$endTime</span> = <span class="var-default">null</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$comments</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$progress</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__unset" title="details" class="method-name">__unset</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">37</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">SlimTimer</span>
+		<span class="method-name">
+			__construct
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodauthenticate" id="authenticate"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">authenticate</span> (line <span class="line-number">68</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Authenticate the user and grab a token id for them, returns a keyed array of the user-id &amp; token</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			authenticate
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$email</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$password</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$setToken</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$email</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$password</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$setToken</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcompleteTask" id="completeTask"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">completeTask</span> (line <span class="line-number">197</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Helper function to easily and quickly complete a task, by default complete it now unless you specify a date</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			completeTask
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$date</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$date</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateTask" id="createTask"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">createTask</span> (line <span class="line-number">134</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create a task</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			createTask
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$coworkers</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$reporters</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$tags</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$coworkers</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$reporters</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateTime" id="createTime"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">createTime</span> (line <span class="line-number">311</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create a time entry</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			createTime
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$duration</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$startTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$endTime</span> = <span class="var-default">null</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$comments</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$progress</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$duration</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$startTime</span><span class="var-description">: DEFAULT=now</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$endTime</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$tags</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$comments</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$progress</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddeleteTask" id="deleteTask"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">deleteTask</span> (line <span class="line-number">229</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Delete a task</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			deleteTask
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddeleteTime" id="deleteTime"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">deleteTime</span> (line <span class="line-number">408</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Delete a time entry</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			deleteTime
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$time_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$time_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistTasks" id="listTasks"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listTasks</span> (line <span class="line-number">106</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">List the tasks in your list</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			listTasks
+		</span>
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$showCompleted</span> = <span class="var-default">true</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$role</span> = <span class="var-default">array('owner','coworker')</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$showCompleted</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$role</span><span class="var-description">: an array of values from owner,coworker,reporter</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$offset</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistTimes" id="listTimes"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listTimes</span> (line <span class="line-number">280</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">List the timesentries in the account</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			listTimes
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$startDate</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$endDate</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$startDate</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$endDate</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$offset</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistTimesForTask" id="listTimesForTask"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listTimesForTask</span> (line <span class="line-number">252</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">List the times for any particular task</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			listTimesForTask
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$startDate</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$endDate</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$startDate</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$endDate</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$offset</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetUserAndToken" id="setUserAndToken"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setUserAndToken</span> (line <span class="line-number">54</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Set the user ID and Access token</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setUserAndToken
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$userID</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$token</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$userId</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$userId</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$token</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$userID</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodshowTask" id="showTask"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">showTask</span> (line <span class="line-number">211</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Show a task</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			showTask
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodshowTime" id="showTime"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">showTime</span> (line <span class="line-number">347</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Show a time entry</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			showTime
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$time_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$time_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodupdateTask" id="updateTask"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">updateTask</span> (line <span class="line-number">169</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Update a task</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			updateTask
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">null</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$coworkers</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$reporters</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$completed</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$tags</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$coworkers</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$reporters</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$completed</span><span class="var-description">: A date/time in the format YYYY-MM-DD HH-MM-SS</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodupdateTime" id="updateTime"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">updateTime</span> (line <span class="line-number">374</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Update a time entry</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> chris</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">obj|false</span>
+		<span class="method-name">
+			updateTime
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$task_id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$time_id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$duration</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$startTime</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$endTime</span> = <span class="var-default">null</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$tags</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$comments</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$progress</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$time_id</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$task_id</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$duration</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$startTime</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$endTime</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$tags</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$comments</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$progress</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__unset" id="__unset"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">__unset</span> (line <span class="line-number">455</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__unset
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="constAPI_KEY" id="API_KEY"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">API_KEY</span>
+			 = <span class="const-default"> 'ae4b927814a4844633f7df27f555b7'</span>
+			(line <span class="line-number">17</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constMAIN_URL" id="MAIN_URL"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<span class="const-title">
+			<span class="const-name">MAIN_URL</span>
+			 = <span class="const-default"> 'http://slimtimer.com/'</span>
+			(line <span class="line-number">14</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+						
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 08 Nov 2012 16:29:50 +0000 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

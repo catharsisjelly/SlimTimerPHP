@@ -9,8 +9,8 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	var $tasks = array();
 	
 	protected static $testTaskID;
-	
-    protected function setUp()
+
+	protected function setUp()
 	{
 		$this->class = new SlimTimer();
 		
@@ -40,7 +40,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		return $this->class->authenticate($this->config['email'], $this->config['password'], true);
 	}
 
-	public function testAuthenticateFail()
+	/*public function testAuthenticateFail()
 	{
 		$return = $this->class->authenticate('bad@bad.com', 'bad');
 		$this->assertTrue(is_array($return));
@@ -141,7 +141,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	
 	public function testUpdateTaskName()
 	{
-		$taskName = 'Bob';
+		$taskName = 'UpdateTask';
 		$this->authenticate();
 		$task = $this->class->createTask($taskName);
 		$this->tasks[] = $task;
@@ -155,7 +155,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	
 	public function testUpdateTaskNoName()
 	{
-		$taskName = 'Bob';
+		$taskName = 'UpdateTaskNoName';
 		$this->authenticate();
 		$task = $this->class->createTask($taskName);
 		$this->tasks[] = $task;
@@ -163,7 +163,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		// Update the task
 		$task = $this->class->updateTask($task->id);
 		$this->assertTrue(is_object($task));
-		$this->assertEquals('Bob', $task->name);
+		$this->assertEquals($taskName, $task->name);
 		$this->assertTrue(((int) $task->id > 0));
 	}
 	
@@ -174,18 +174,85 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	
 	public function testCompleteTask()
 	{
-		$taskName = 'Bob';
+		$taskName = 'CompleteTask';
 		$this->authenticate();
 		$task = $this->class->createTask($taskName);
 		$this->tasks[] = $task;
+		
 		$time = time();
 		$completedTask = $this->class->completeTask($task->id, date('Y-m-d H:i:s', $time));
-		$this->assertTrue(is_string($completeTask->completed_on));
-		$this->assertRegExp('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/', $completeTask->completed_on);
-		$this->assertNotNull(strtotime($completedTask->completed_on));
-		$this->assertTrue(strtotime($completedTask->completed_on) >= $time);
+		$this->assertTrue(is_string($completedTask->{'completed-on'}));
+		$this->assertRegExp('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/', $completedTask->{'completed-on'});
+		$this->assertNotNull(strtotime($completedTask->{'completed-on'}));
+		$this->assertTrue(strtotime($completedTask->{'completed-on'}) >= $time);
 	}
 	
+	public function testShowTask()
+	{
+		$taskName = 'ShowTask';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		$taskFromAPI = $this->class->showTask($task->id);
+		$this->assertEquals($task, $taskFromAPI);
+	}
+	
+	public function testDeleteTask()
+	{
+		$taskName = 'Bob';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$return = $this->class->deleteTask($task->id);
+		$this->assertTrue($return);
+	}
+	
+	public function testListTasks()
+	{
+		$this->authenticate();
+		$taskIDs = array();
+		for($i = 1; $i <= 3; $i++)
+		{
+			$task = $this->class->createTask('listTask'.$i);
+			$this->tasks[] = $task;
+			$taskIDs[] = $task->id;
+		}
+		$tasks = $this->class->listTasks();
+		$this->assertTrue(is_array($tasks->task));
+		
+		foreach($tasks->task as $task)
+			$this->assertTrue(in_array($task->id, $taskIDs));
+	}
+	
+	public function testCreateTime()
+	{
+		$this->authenticate();
+		$duration = 3600;
+				
+		$task = $this->class->createTask('createTimeTask');
+		$this->tasks[] = $task;
+		$time = $this->class->createTime($task->id, $duration);
+		$created = strtotime($time->{'created-at'});
+		$endTime = strtotime($time->{'end-time'});
+		$this->assertTrue($time->id > 0);
+		$this->assertEquals($task->id, $time->task->id);
+		$this->assertEquals((float) $time->task->hours, (float) 1.0);
+	}*/
+	
+	public function testUpdateTime()
+	{
+		$this->authenticate();
+		$duration = 3600;
+				
+		$task = $this->class->createTask('createTimeTask');
+		$this->tasks[] = $task;
+		$time = $this->class->createTime($task->id, $duration);
+		$time = $this->class->updateTime($time->id, $task->id, $duration);
+		$created = strtotime($time->{'created-at'});
+		$endTime = strtotime($time->{'end-time'});
+		$this->assertTrue($time->id > 0);
+		$this->assertEquals($task->id, $time->task->id);
+		$this->assertEquals((float) $time->task->hours, (float) 1.0);
+	}
 	
 }
 
