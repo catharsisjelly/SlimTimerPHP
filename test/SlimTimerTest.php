@@ -8,7 +8,9 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	var $config = array();
 	var $tasks = array();
 	
-    protected function setUp()
+	protected static $testTaskID;
+
+	protected function setUp()
 	{
 		$this->class = new SlimTimer();
 		
@@ -33,8 +35,12 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		}
 	}
 
+	protected function authenticate()
+	{
+		return $this->class->authenticate($this->config['email'], $this->config['password'], true);
+	}
 
-	public function testAuthenticateFail()
+	/*public function testAuthenticateFail()
 	{
 		$return = $this->class->authenticate('bad@bad.com', 'bad');
 		$this->assertTrue(is_array($return));
@@ -46,7 +52,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	
 	public function testAuthenticatePass()
 	{
-		$return = $this->class->authenticate($this->config['email'], $this->config['password']);
+		$return = $this->authenticate();
 		$this->assertTrue(is_array($return));
 		$this->assertArrayHasKey('user-id', $return);
 		$this->assertArrayHasKey('token', $return);
@@ -57,7 +63,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	public function testCreateTaskBasic()
 	{
 		$taskName = 'testCreateTaskBasic';
-		$this->class->authenticate($this->config['email'], $this->config['password'], true);
+		$this->authenticate();
 		$task = $this->class->createTask($taskName);
 		$this->tasks[] = $task;
 		$this->assertTrue(is_object($task));
@@ -69,7 +75,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	{
 		$taskName = 'testCreateTaskWithTags';
 		$tags = array('tag1', 'tag2');
-		$this->class->authenticate($this->config['email'], $this->config['password'], true);
+		$this->authenticate();
 		$task = $this->class->createTask($taskName, $tags);
 		$this->tasks[] = $task;
 		$this->assertTrue(is_object($task));
@@ -85,7 +91,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		$taskName = 'testCreateTaskWithCoworkers';
 		if(array_key_exists('coworkers', $this->config))
 		{
-			$this->class->authenticate($this->config['email'], $this->config['password'], true);
+			$this->authenticate();
 			$task = $this->class->createTask($taskName, array(), $this->config['coworkers']);
 			$this->tasks[] = $task;
 			
@@ -108,7 +114,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		$taskName = 'testCreateTaskWithReporters';
 		if(array_key_exists('reporters', $this->config))
 		{
-			$this->class->authenticate($this->config['email'], $this->config['password'], true);
+			$this->authenticate();
 			$task = $this->class->createTask($taskName, array(), array(), $this->config['reporters']);
 			$this->tasks[] = $task;
 			$this->assertTrue(is_object($task));
@@ -125,6 +131,129 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 			$this->markTestSkipped("Test skipped due to missing reporters in the config");
 		}
 	}
+	
+	public function testCreateTaskEmptyName()
+	{
+		$this->setExpectedException('Exception');
+		$this->authenticate();
+		$task = $this->class->createTask('');
+	}
+	
+	public function testUpdateTaskName()
+	{
+		$taskName = 'UpdateTask';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		
+		// Update the task
+		$task = $this->class->updateTask($task->id, 'Jim');
+		$this->assertTrue(is_object($task));
+		$this->assertEquals('Jim', $task->name);
+		$this->assertTrue(((int) $task->id > 0));
+	}
+	
+	public function testUpdateTaskNoName()
+	{
+		$taskName = 'UpdateTaskNoName';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		
+		// Update the task
+		$task = $this->class->updateTask($task->id);
+		$this->assertTrue(is_object($task));
+		$this->assertEquals($taskName, $task->name);
+		$this->assertTrue(((int) $task->id > 0));
+	}
+	
+	public function testUpdateTaskBadID()
+	{
+		$this->markTestIncomplete('Not implemented yet');
+	}
+	
+	public function testCompleteTask()
+	{
+		$taskName = 'CompleteTask';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		
+		$time = time();
+		$completedTask = $this->class->completeTask($task->id, date('Y-m-d H:i:s', $time));
+		$this->assertTrue(is_string($completedTask->{'completed-on'}));
+		$this->assertRegExp('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/', $completedTask->{'completed-on'});
+		$this->assertNotNull(strtotime($completedTask->{'completed-on'}));
+		$this->assertTrue(strtotime($completedTask->{'completed-on'}) >= $time);
+	}
+	
+	public function testShowTask()
+	{
+		$taskName = 'ShowTask';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$this->tasks[] = $task;
+		$taskFromAPI = $this->class->showTask($task->id);
+		$this->assertEquals($task, $taskFromAPI);
+	}
+	
+	public function testDeleteTask()
+	{
+		$taskName = 'Bob';
+		$this->authenticate();
+		$task = $this->class->createTask($taskName);
+		$return = $this->class->deleteTask($task->id);
+		$this->assertTrue($return);
+	}
+	
+	public function testListTasks()
+	{
+		$this->authenticate();
+		$taskIDs = array();
+		for($i = 1; $i <= 3; $i++)
+		{
+			$task = $this->class->createTask('listTask'.$i);
+			$this->tasks[] = $task;
+			$taskIDs[] = $task->id;
+		}
+		$tasks = $this->class->listTasks();
+		$this->assertTrue(is_array($tasks->task));
+		
+		foreach($tasks->task as $task)
+			$this->assertTrue(in_array($task->id, $taskIDs));
+	}
+	
+	public function testCreateTime()
+	{
+		$this->authenticate();
+		$duration = 3600;
+				
+		$task = $this->class->createTask('createTimeTask');
+		$this->tasks[] = $task;
+		$time = $this->class->createTime($task->id, $duration);
+		$created = strtotime($time->{'created-at'});
+		$endTime = strtotime($time->{'end-time'});
+		$this->assertTrue($time->id > 0);
+		$this->assertEquals($task->id, $time->task->id);
+		$this->assertEquals((float) $time->task->hours, (float) 1.0);
+	}*/
+	
+	public function testUpdateTime()
+	{
+		$this->authenticate();
+		$duration = 3600;
+				
+		$task = $this->class->createTask('createTimeTask');
+		$this->tasks[] = $task;
+		$time = $this->class->createTime($task->id, $duration);
+		$time = $this->class->updateTime($time->id, $task->id, $duration);
+		$created = strtotime($time->{'created-at'});
+		$endTime = strtotime($time->{'end-time'});
+		$this->assertTrue($time->id > 0);
+		$this->assertEquals($task->id, $time->task->id);
+		$this->assertEquals((float) $time->task->hours, (float) 1.0);
+	}
+	
 }
 
 ?>

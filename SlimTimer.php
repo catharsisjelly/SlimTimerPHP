@@ -133,6 +133,9 @@ class SlimTimer
 	 */
 	public function createTask($name, array $tags = array(), array $coworkers = array(), array $reporters = array())
 	{
+		if(empty($name))
+			throw new Exception('name parameter cannot be null');
+		
 		$params = array(
 			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
@@ -160,7 +163,7 @@ class SlimTimer
 	 * @param array $tags 
 	 * @param array $coworkers 
 	 * @param array $reporters 
-	 * @param string $completed 
+	 * @param string $completed A date/time in the format YYYY-MM-DD HH-MM-SS
 	 * @return obj|false
 	 */
 	public function updateTask($task_id, $name = null, array $tags = array(), array $coworkers = array(), array $reporters = array(), $completed = null)
@@ -368,7 +371,7 @@ class SlimTimer
 	 * @return obj|false
 	 * @author chris
 	 */
-	public function updateTime($task_id, $time_id, $duration, $startTime, $endTime = null, array $tags = array(), $comments = "", $progress = false)
+	public function updateTime($time_id, $task_id = null, $duration = null, $startTime = null, $endTime = null, array $tags = array(), $comments = "", $progress = false)
 	{
 		if($duration <= 0)
 			throw new Exception('Duration must be more than 0');
@@ -388,6 +391,13 @@ class SlimTimer
 				'in_progress' => $progress,
 			)
 		);
+		
+		if($duration)
+			$params['time_entry']['duration_in_seconds'] = (int) $duration;
+		
+		if($task_id)
+			$params['time_entry']['task_id'] = $task_id;
+			
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "PUT");
 		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id);
@@ -427,10 +437,10 @@ class SlimTimer
 		if(!$string)
 			return false;
 		
-		if($string && preg_match("/\d{4}-\d{2}-\d{2}T?\d{2}:\d{2}:\d{2}/", $string))
+		if($string && preg_match("/\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}/", $string))
 			return $string;
 		
-		throw new Exception("Date format must be yyyy-mm-dd hh:mm:ss");
+		throw new Exception("Date format must be yyyy-mm-dd hh:mm:ss you provided {$string}");
 	}
 	
 	/**
@@ -442,7 +452,7 @@ class SlimTimer
 	private function _tidyXML($content)
 	{
 		$content = preg_replace("/[\r\n\s]{2,}/", "", $content);
-		$xml = simplexml_load_string($content);
+		$xml = @simplexml_load_string($content);
 		if(!$xml)
 			return false;
 
