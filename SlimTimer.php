@@ -274,7 +274,7 @@ class SlimTimer
 	}
 	
 	/**
-	 * List the timesentries in the account
+	 * List the times entries in the account
 	 *
 	 * @param string $startDate 
 	 * @param string $endDate 
