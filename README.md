@@ -7,7 +7,9 @@ I use SlimTimer to monitor how long I spend on tasks and love how simplistic
 and useful it is. I was wanting to automate a weekly export so that I did
 not have to remember to do it and was surprised that I could not find a
 pure PHP implementation. I found one using the Zend Framework but wanted
-one to run independently of that.
+one to run independently of that. In general the code will return a
+SimpleXML object for you to play with so remember that you will need to
+cast the various things you need to pass.
 
 Requirements
 ------------
@@ -19,6 +21,8 @@ I am not affiliated in any way with SlimTimer and all rights to it are property
 of the original developer. You use this bit of code at your own risk,
 please provide any feedback you like or better yet fork the repository and
 contribute.
+
+For more information on Slimtimer please visit the website : http://slimtimer.com/
 
 Testing
 -------
@@ -34,29 +38,29 @@ an example of the config file.
 
 Todo
 ----
+* Make it so that you do not have to cast everything
 * Test Suite
 * More docs
 
 Example usage
 -------------
 
-	$apiKey = 'ae4b927814a4844633f7df27f555b7';
 	$email = '';
 	$password = '';
 
 	$s = new SlimTimer($apiKey);
-	$userId = $s->authenticate($email, $password);
+	$authResponse = $s->authenticate($email, $password);
 
-	$tasks = $s->listTasks($userId);
+	$tasks = $s->listTasks();
 	var_dump($tasks);
 
-	$s->createTask($userId, "Test via API");
-	$s->updateTask($userId, 1879734, null, array('foo', 'bar'));
-	$s->showTask($userId, 1899512);
-	$s->deleteTask($userId, 1899512);
-	$s->listTimes($userId);
-	$s->listTimesForTask($userId, 1879734);
-	$s->createTime($userId, 1879734, date('Y-m-d H:i:s'), 1);
-	$time = $s->showTime($userId, 19016444);
-	$s->updateTime($userId, 1879734, $time->id, 10, $time->{'start-time'});
-	$s->deleteTime($userId, $time->id);
+	$task = $s->createTask("Test via API");
+	$s->updateTask((int) $task->id, null, array('foo', 'bar'));
+	$s->showTask((int) $task->id);
+	$s->deleteTask((int) $task->id);
+	$s->listTimes();
+	$s->listTimesForTask((int) $task->id);
+	$time = $s->createTime((int) $task->id, date('Y-m-d H:i:s'), 1);
+	$s->showTime((int) $time->id);
+	$s->updateTime((int) $task->id, (int) $time->id, 10, $time->{'start-time'});
+	$s->deleteTime((int) $time->id);

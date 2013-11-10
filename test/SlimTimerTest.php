@@ -40,24 +40,16 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		return $this->class->authenticate($this->config['email'], $this->config['password'], true);
 	}
 
-	/*public function testAuthenticateFail()
+	public function testAuthenticateFail()
 	{
 		$return = $this->class->authenticate('bad@bad.com', 'bad');
-		$this->assertTrue(is_array($return));
-		$this->assertArrayHasKey('user-id', $return);
-		$this->assertArrayHasKey('token', $return);
-		$this->assertEmpty($return['token']);
-		$this->assertEquals(0, $return['user-id']);
+		$this->assertFalse($return);
 	}
 	
 	public function testAuthenticatePass()
 	{
 		$return = $this->authenticate();
-		$this->assertTrue(is_array($return));
-		$this->assertArrayHasKey('user-id', $return);
-		$this->assertArrayHasKey('token', $return);
-		$this->assertNotEmpty($return['token']);
-		$this->assertTrue(($return['user-id'] != 0));
+		$this->assertTrue($return);
 	}
 	
 	public function testCreateTaskBasic()
@@ -83,8 +75,6 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(((int) $task->id > 0));
 		$this->assertEquals($tags, explode(',', $task->tags));
 	}
-	
-	//createTask($name, array $tags = array(), array $coworkers = array(), array $reporters = array())
 	
 	public function testCreateTaskWithCoworkers()
 	{
@@ -181,10 +171,9 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		
 		$time = time();
 		$completedTask = $this->class->completeTask($task->id, date('Y-m-d H:i:s', $time));
-		$this->assertTrue(is_string($completedTask->{'completed-on'}));
-		$this->assertRegExp('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/', $completedTask->{'completed-on'});
-		$this->assertNotNull(strtotime($completedTask->{'completed-on'}));
-		$this->assertTrue(strtotime($completedTask->{'completed-on'}) >= $time);
+		$this->assertRegExp('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/', (string) $completedTask->{'completed-on'});
+		$this->assertNotNull(strtotime((string) $completedTask->{'completed-on'}));
+		$this->assertTrue(strtotime((string) $completedTask->{'completed-on'}) >= $time);
 	}
 	
 	public function testShowTask()
@@ -217,10 +206,9 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 			$taskIDs[] = $task->id;
 		}
 		$tasks = $this->class->listTasks();
-		$this->assertTrue(is_array($tasks->task));
 		
 		foreach($tasks->task as $task)
-			$this->assertTrue(in_array($task->id, $taskIDs));
+			$this->assertTrue(in_array((int) $task->id, $taskIDs));
 	}
 	
 	public function testCreateTime()
@@ -236,7 +224,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($time->id > 0);
 		$this->assertEquals($task->id, $time->task->id);
 		$this->assertEquals((float) $time->task->hours, (float) 1.0);
-	}*/
+	}
 	
 	public function testUpdateTime()
 	{
