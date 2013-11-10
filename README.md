@@ -8,7 +8,7 @@ and useful it is. I was wanting to automate a weekly export so that I did
 not have to remember to do it and was surprised that I could not find a
 pure PHP implementation. I found one using the Zend Framework but wanted
 one to run independently of that. In general the code will return a
-SimpleXML object for you to play with so remember that you will need to
+JSON object for you to play with so remember that you may need to
 cast the various things you need to pass.
 
 Requirements
@@ -31,14 +31,13 @@ an example of the config file.
 
 	email = "test@foo.com"
 	password = "1234"
-	coworkers[] "me@foo.com"
-	coworkers[] "you@foo.com"
-	reporters[] "us@foo.com"
-	reporters[] "them@foo.com"
+	coworkers[] = "me@foo.com"
+	coworkers[] = "you@foo.com"
+	reporters[] = "us@foo.com"
+	reporters[] = "them@foo.com"
 
 Todo
 ----
-* Make it so that you do not have to cast everything
 * Test Suite
 * More docs
 
@@ -55,12 +54,12 @@ Example usage
 	var_dump($tasks);
 
 	$task = $s->createTask("Test via API");
-	$s->updateTask((int) $task->id, null, array('foo', 'bar'));
-	$s->showTask((int) $task->id);
-	$s->deleteTask((int) $task->id);
+	$s->updateTask($task->id, null, array('foo', 'bar'));
+	$s->showTask($task->id);
+	$s->deleteTask($task->id);
 	$s->listTimes();
-	$s->listTimesForTask((int) $task->id);
-	$time = $s->createTime((int) $task->id, date('Y-m-d H:i:s'), 1);
-	$s->showTime((int) $time->id);
-	$s->updateTime((int) $task->id, (int) $time->id, 10, $time->{'start-time'});
-	$s->deleteTime((int) $time->id);
+	$s->listTimesForTask($task->id);
+	$time = $s->createTime($task->id, date('Y-m-d H:i:s'), 1);
+	$s->showTime($time->id);
+	$s->updateTime($task->id, $time->id, 10, $time->{'start-time'});
+	$s->deleteTime($time->id);

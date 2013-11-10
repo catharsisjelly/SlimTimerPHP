@@ -366,7 +366,7 @@ class SlimTimer
 	 *
 	 * @param int $time_id 
 	 * @param int $task_id 
-	 * @param int $duration 
+	 * @param int $duration Duration In Seconds
 	 * @param string $startTime 
 	 * @param string $endTime 
 	 * @param array $tags
@@ -375,7 +375,7 @@ class SlimTimer
 	 * @return obj|false
 	 * @author chris
 	 */
-	public function updateTime($time_id, $task_id = null, $duration = null, $startTime = null, $endTime = null, array $tags = array(), $comments = "", $progress = false)
+	public function updateTime($time_id, $task_id, $duration, $startTime, $endTime = null, array $tags = array(), $comments = "", $progress = false)
 	{
 		if($duration <= 0)
 			throw new Exception('Duration must be more than 0');
@@ -461,7 +461,7 @@ class SlimTimer
 		if(!$xml)
 			return false;
 
-		return $xml;
+		return @json_decode(@json_encode($xml));
 	}
 
 	public function __unset($name)
