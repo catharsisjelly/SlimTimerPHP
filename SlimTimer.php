@@ -259,11 +259,9 @@ class SlimTimer
 		$params = array(
 			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
-			'timeentry' => array(
-				'range_start' => $this->_checkDate($startDate), 
-				'range_end' => $this->_checkDate($endDate),
-				'offset' => (is_int($offset) ? $offset : 0)
-			)
+			'range_start' => $this->_checkDate($startDate), 
+			'range_end' => $this->_checkDate($endDate),
+			'offset' => (is_int($offset) ? $offset : 0)
 		);
 
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/tasks/'.$task_id.'/time_entries?'.http_build_query($params));
@@ -287,11 +285,9 @@ class SlimTimer
 		$params = array(
 			'api_key' => self::API_KEY,
 			'access_token' => $this->_accessToken,
-			'timeentry' => array(
-				'range_start' => $this->_checkDate($startDate), 
-				'range_end' => $this->_checkDate($endDate),
-				'offset' => (is_int($offset) ? $offset : 0)
-			)
+			'range_start' => $this->_checkDate($startDate), 
+			'range_end' => $this->_checkDate($endDate),
+			'offset' => (is_int($offset) ? $offset : 0)
 		);
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries?'.http_build_query($params));
 		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
