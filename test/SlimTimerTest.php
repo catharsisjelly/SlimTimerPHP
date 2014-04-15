@@ -40,6 +40,13 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		return $this->class->authenticate($this->config['email'], $this->config['password'], true);
 	}
 
+	public function testAuthBadKey()
+	{
+		$s = new SlimTimer('myAPISucks');
+		$return = $this->authenticate();
+		$this->assertFalse($return);
+	}
+
 	public function testAuthenticateFail()
 	{
 		$return = $this->class->authenticate('bad@bad.com', 'bad');

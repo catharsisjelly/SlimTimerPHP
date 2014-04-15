@@ -34,7 +34,18 @@ class SlimTimer
 	 */
 	private $_accessToken = null;
 
-	public function __construct()
+	/**
+	 * Contatiner for the APIKey
+	 * @var string
+	 */
+	private $_apiKey;
+
+	/**
+	 * Constructor that optiionally takes an APIKey
+	 *
+	 * @var string
+	 **/
+	public function __construct($apiKey = null)
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -43,6 +54,9 @@ class SlimTimer
 			'Accept: application/xml'
 		));
 		$this->_ch = $ch;
+		$this->_apiKey = $this->_apiKey;
+		if(null !== $apiKey)
+			$this->_apiKey = $apiKey;
 	}
 	
 	/**
@@ -72,7 +86,7 @@ class SlimTimer
 				'email' => $email,
 				'password' => $password
 			),
-			'api_key' => self::API_KEY
+			'api_key' => $this->_apiKey
 		);
 		curl_setopt($this->_ch, CURLOPT_POST, 1);
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/token');
@@ -111,7 +125,7 @@ class SlimTimer
 	{
 		$string = array();
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'show_completed' => ($showCompleted ? 'yes' : 'no'),
 			'role' => implode(',', $role),
@@ -141,7 +155,7 @@ class SlimTimer
 			throw new Exception('name parameter cannot be empty');
 		
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'task' => array(
 				'name' => $name,
@@ -173,7 +187,7 @@ class SlimTimer
 	public function updateTask($task_id, $name = null, array $tags = array(), array $coworkers = array(), array $reporters = array(), $completed = null)
 	{
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'task' => array(
 				'name' => $name,
@@ -215,7 +229,7 @@ class SlimTimer
 	public function showTask($task_id)
 	{
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 		);
 		curl_setopt($this->_ch, CURLOPT_HTTPGET, 1);
@@ -233,7 +247,7 @@ class SlimTimer
 	public function deleteTask($task_id)
 	{
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 		);
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
@@ -257,7 +271,7 @@ class SlimTimer
 	{
 		// /users/user_id/time_entries
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'range_start' => $this->_checkDate($startDate), 
 			'range_end' => $this->_checkDate($endDate),
@@ -283,7 +297,7 @@ class SlimTimer
 	{
 		// /users/user_id/time_entries
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'range_start' => $this->_checkDate($startDate), 
 			'range_end' => $this->_checkDate($endDate),
@@ -317,7 +331,7 @@ class SlimTimer
 			$startTime = date('Y-m-d H:i:s');
 
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'time_entry' => array(
 				// required
@@ -347,7 +361,7 @@ class SlimTimer
 	public function showTime($time_id)
 	{
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken
 		);
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/'.$this->_userID.'/time_entries/'.$time_id.'?'.http_build_query($params));
@@ -377,7 +391,7 @@ class SlimTimer
 			throw new Exception('Duration must be more than 0');
 
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken,
 			'time_entry' => array(
 				// required
@@ -415,7 +429,7 @@ class SlimTimer
 	public function deleteTime($time_id)
 	{
 		$params = array(
-			'api_key' => self::API_KEY,
+			'api_key' => $this->_apiKey,
 			'access_token' => $this->_accessToken
 		);
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, "DELETE");
