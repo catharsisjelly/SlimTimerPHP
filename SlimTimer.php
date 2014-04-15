@@ -54,7 +54,7 @@ class SlimTimer
 			'Accept: application/xml'
 		));
 		$this->_ch = $ch;
-		$this->_apiKey = $this->_apiKey;
+		$this->_apiKey = self::API_KEY;
 		if(null !== $apiKey)
 			$this->_apiKey = $apiKey;
 	}
@@ -92,9 +92,8 @@ class SlimTimer
 		curl_setopt($this->_ch, CURLOPT_URL, self::MAIN_URL.'/users/token');
         curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($params));
         $content=curl_exec($this->_ch);
-
-		$xml = simplexml_load_string($content);
 		
+        $xml = simplexml_load_string($content);
 		if(!$xml)
 		{
 			error_log("SlimTimerPHP: Invalid API Response $content");
@@ -103,7 +102,7 @@ class SlimTimer
 
 		if((int) $xml->{'user-id'} == 0)
 		{
-			error_log("SlimTimerPHP: User authentic auth failed");
+			error_log("SlimTimerPHP: User authenticate auth failed");
 			return false;
 		}
 
@@ -152,7 +151,7 @@ class SlimTimer
 	public function createTask($name, array $tags = array(), array $coworkers = array(), array $reporters = array())
 	{
 		if(empty($name))
-			throw new Exception('name parameter cannot be empty');
+			throw new LengthException('name parameter cannot be empty');
 		
 		$params = array(
 			'api_key' => $this->_apiKey,

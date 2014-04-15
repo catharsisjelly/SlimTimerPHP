@@ -20,11 +20,17 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 		
 		$this->config = parse_ini_file($configFile);
 		
+        if(!ini_get('date.timezone'))
+            date_default_timezone_set('Europe/London');
+		
 		if(!array_key_exists('email', $this->config))
-			throw new Exception('Your config file should have an email entry');
+			die('Your config file should have an email entry');
 		
 		if(!array_key_exists('password', $this->config))
-			throw new Exception('Your config file should have a password entry');
+			die('Your config file should have a password entry');
+
+        if(!function_exists('curl_init'))
+            die('You must have curl compiled into php for this to work');
 	}
 	
 	protected function tearDown()
@@ -43,7 +49,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	public function testAuthBadKey()
 	{
 		$s = new SlimTimer('myAPISucks');
-		$return = $this->authenticate();
+		$return = $s->authenticate($this->config['email'], $this->config['password']);
 		$this->assertFalse($return);
 	}
 
@@ -131,7 +137,7 @@ class SlimTimerTest extends PHPUnit_Framework_TestCase
 	
 	public function testCreateTaskEmptyName()
 	{
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('LengthException');
 		$this->authenticate();
 		$task = $this->class->createTask('');
 	}
