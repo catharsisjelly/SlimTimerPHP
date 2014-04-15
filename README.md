@@ -26,7 +26,7 @@ For more information on Slimtimer please visit the website : http://slimtimer.co
 
 Testing
 -------
-To run the tests you must use PHPUnit and add a config file below is
+To run the tests you must use PHPUnit and add a config.ini file. Below is
 an example of the config file.
 
 	email = "test@foo.com"
@@ -36,18 +36,13 @@ an example of the config file.
 	reporters[] = "us@foo.com"
 	reporters[] = "them@foo.com"
 
-Todo
-----
-* Test Suite
-* More docs
-
 Example usage
 -------------
 
 	$email = '';
 	$password = '';
 
-	$s = new SlimTimer($apiKey);
+	$s = new SlimTimer();
 	$authResponse = $s->authenticate($email, $password);
 
 	$tasks = $s->listTasks();
